@@ -98,13 +98,13 @@ namespace TicTacToe
 
         public void Play ()
         {
+            int current = -1;
             while ( true )
-            {
-                int current = -1;
+            {                
                 do
                 {
                     current = ( current + 1 ) % 2;
-                    _players[current].Turn( _board );
+                    _players[current].Move( _board );
                 } while ( !_board.isWin( _players[current] ) && !_board.isDraw() );
 
                 Console.WriteLine( "Again? (Y/N)" );

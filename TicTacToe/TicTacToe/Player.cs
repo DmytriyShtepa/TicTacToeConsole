@@ -9,7 +9,7 @@ namespace TicTacToe
         public string playerName { get; protected set; }
         public Marks playerMark { get; protected set; }
 
-        public abstract void Turn ( Board board );
+        public abstract void Move ( Board board );
         public abstract void init ( string Name, Marks mark );
         public virtual void Reset () {}
     }
@@ -22,7 +22,7 @@ namespace TicTacToe
             playerMark = Mark;
         }
 
-        public override void Turn ( Board _board )
+        public override void Move ( Board _board )
         {
             int row, col;
             do
@@ -73,10 +73,13 @@ namespace TicTacToe
             playerMark = mark;
         }
 
-        public override void Turn ( Board board )
+        public override void Move ( Board board )
         {
-            _HumanCoefficient( board.History.Last() );
-            _possibleWin();
+            if( board.History.Count > 0 )
+            {
+                _HumanCoefficient( board.History.Last() );
+                _possibleWin();
+            }               
             int position = _MaxValue( board.FreeCell );
             Coefficient[position] = AICoefficient;
             _AICoefficient( position );
@@ -138,6 +141,20 @@ namespace TicTacToe
             }
             else if ( pos == 4 )
             {
+                //  Rows change coefficient
+                for ( position = pos % 3; position < 9; position = position + 3 )
+                {
+                    if ( Coefficient[position] != HumanCoefficient && Coefficient[position] != AICoefficient )
+                        Coefficient[position] -= 10;
+                }
+
+                //  Columns change coefficient
+                start = pos - pos % 3;
+                for ( position = start; position < start + 3; ++position )
+                {
+                    if ( Coefficient[position] != HumanCoefficient && Coefficient[position] != AICoefficient )
+                        Coefficient[position] -= 10;
+                }
                 for ( position = 0; position < 9; position = position + 4 )
                 {
                     if ( Coefficient[position] != HumanCoefficient && Coefficient[position] != AICoefficient )
